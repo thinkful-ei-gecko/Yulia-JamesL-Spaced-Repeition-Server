@@ -46,9 +46,10 @@ const LanguageService = {
 
   getNextWord(db, head) {
     return db
+    //find word that is the head from word db and return vals to pass test
       .from('word')
       .select('original', 'correct_count', 'incorrect_count')
-      .where('word.id', head)
+      .where('word.id', head) //adds head col that ref word.id
       .then(word => {
         return {
           nextWord: word[0].original,
