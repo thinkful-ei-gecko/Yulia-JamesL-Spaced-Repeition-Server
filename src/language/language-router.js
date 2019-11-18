@@ -64,35 +64,7 @@ languageRouter
 
 languageRouter
   .post('/guess', bodyParser, async (req, res, next) => {
-    const { guess } = req.body;
-    if(!guess) {
-      return res.status(400).send({ erorr: "Missing 'guess' in request body" })
-    }
-    try {
-      const words = await LanguageService.getLanguageWords(
-        req.app.get('db'), req.language.id
-      )
-      let list = await LanguageService.createLinkedList(words, req.language)
-      const head = list.head;
-      let { translation } = head.value;
-      let correct = false;
-      if(guess === translation) {
-        correct = true;
-        head.value.memory_value *= 2
-        head.value.correct_count++
-        req.language.total_score++
-      }
-      else {
-        head.value.incorrect_count++
-        head.value.memory_value = 1
-      }
-      list.remove(head.value);
-      list.insertAt(head.value, head.value.memory_value + 1);
-
-    }
-    catch(error) {
-      next(error);
-    }
+ 
   });
 
 module.exports = languageRouter
