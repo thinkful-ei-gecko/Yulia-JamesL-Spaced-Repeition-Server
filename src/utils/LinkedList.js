@@ -107,9 +107,28 @@ class LinkedList {
       this.insertLast(item);
     }
     let tempNode = currNode;
-    prevNode.next = new _Node(item, tempNode);
+    let newNode = new _Node(item, tempNode)
+    prevNode.next = newNode;
   }
+  // insertAt(item, pos){
+  //   if (this.head === null) {
+  //     console.log('Key is not found');
+  //     return;
+  //   }
+  //   let currNode = this.head;
+  //   let previousNode = this.head;
+      
+  //   for(let currPos = 1; currPos < pos; ++currPos){
+  //     previousNode = currNode;
+  //     currNode = currNode.next;
+  //   }
+  //   //this.insertBefore(item, currNode);
+  //   //previousNode.next = new _Node(item, previousNode.next);
+  //   previousNode.next = new _Node(item, currNode);
+  //   console.log(previousNode.next)
+  // }
 }
+
 
 function display(list) {
   let currNode = list.head;

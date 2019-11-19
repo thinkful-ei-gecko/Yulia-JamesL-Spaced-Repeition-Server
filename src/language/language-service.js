@@ -32,17 +32,18 @@ const LanguageService = {
       .where({ language_id });
   },
 
-  // createLinkedList(arr, language) {
-  //   let list = new LinkedList();
-  //   let curr = arr.find(e => e.id === language.head);
-  //   list.insertLast(curr);
+  createLinkedList(arr, language) {
+    let list = new LinkedList();
+    let curr = arr.find(word => word.id === language.head);
 
-  //   while(curr.next !== null) {
-  //     curr = arr.find(e => e.id === curr.next);
-  //     list.insertLast(curr);
-  //   }
-  //   return list;
-  // },
+    list.insertLast(curr);
+
+    while(curr.next !== null) {
+      curr = arr.find(word => word.id === curr.next);
+      list.insertLast(curr);
+    }
+    return list;
+  },
 
   getNextWord(db, head) {
     return db
@@ -59,11 +60,29 @@ const LanguageService = {
       });
   },
 
-  // updateList(db, list, langId, count) {
-  //   return db.transaction(async trx => {
+  updateLanguage(db, fields) {
+    return db.transaction(trx => {
+      return trx('language')
+      .where({id: fields.langId})
+      .update({
+        total_score: fields.totalScore,
+        head: fields.head
+      })
+    })
+  },
 
-  //   })
-  // }
+  updateWord(db, fields) {
+    return db.transaction(trx => {
+      return trx('word')
+        .where({id: fields.wordId})
+        .update({
+          memory_value: fields.memoryValue,
+          correct_count: fields.correctCount,
+          incorrect_count: fields.incorrectCount,
+          next: fields.next
+        })
+    })
+  }
 }
 
 module.exports = LanguageService
