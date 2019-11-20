@@ -21,6 +21,7 @@ class LinkedList {
     }
   }
   remove(item) {
+    console.log('REMOVING--->')
     if (!this.head) return null;
     if (this.head.value === item) {
       this.head = this.head.next;
@@ -85,66 +86,55 @@ class LinkedList {
     let tempNode = currNode.next;
     currNode.next = new _Node(item, tempNode);
   }
-  insertAt(item, position) {
-    if (this.head === null) {
-      if (position === 1) {
-        this.insertFirst(item);
-        return;
-      } else {
-        this.insertLast(item);
-        return;
-      }
-    }
-    let currentPosition = 1;
-    let currNode = this.head;
-    let prevNode = this.head;
-    while (currentPosition !== position && currNode !== null) {
-      prevNode = currNode;
-      currNode = currNode.next;
-      currentPosition++;
-    }
-    if (currNode === null) {
-      this.insertLast(item);
-    }
-    let tempNode = currNode;
-    let newNode = new _Node(item, tempNode)
-    prevNode.next = newNode;
-  }
-  // insertAt(item, pos){
+  // insertAt(item, position) {
   //   if (this.head === null) {
-  //     console.log('Key is not found');
-  //     return;
+  //     if (position === 1) {
+  //       this.insertFirst(item);
+  //       return;
+  //     } else {
+  //       this.insertLast(item);
+  //       return;
+  //     }
   //   }
+  //   let currentPosition = 1;
   //   let currNode = this.head;
-  //   let previousNode = this.head;
-      
-  //   for(let currPos = 1; currPos < pos; ++currPos){
-  //     previousNode = currNode;
+  //   let prevNode = this.head;
+  //   while (currentPosition !== position && currNode !== null) {
+  //     prevNode = currNode;
   //     currNode = currNode.next;
+  //     currentPosition++;
   //   }
-  //   //this.insertBefore(item, currNode);
-  //   //previousNode.next = new _Node(item, previousNode.next);
-  //   previousNode.next = new _Node(item, currNode);
-  //   console.log(previousNode.next)
+  //   if (currNode === null) {
+  //     this.insertLast(item);
+  //   }
+  //   let tempNode = currNode;
+  //   let newNode = new _Node(item, tempNode)
+  //   prevNode.next = newNode;
   // }
-}
-
-
-function display(list) {
-  let currNode = list.head;
-  if (currNode === null) {
-    console.log('List is empty');
-    return;
+  
+  insertAt(itemToInsert, nthPosition) { 
+    
+    if (nthPosition < 0) { 
+      throw new Error('Position error'); 
+    } 
+    if (nthPosition === 0) { 
+      this.insertFirst(itemToInsert); 
+    }else { 
+      const node = this._findNthElement(nthPosition - 1); 
+      const newNode = new _Node(itemToInsert, null); 
+      newNode.next = node.next; 
+      node.next = newNode; 
+    } 
   }
-  return displayHelper(currNode, []);
-}
-
-function displayHelper(node, arr) {
-  if (node === null) {
-    return [];
-  } else {
-    return [node.value, ...displayHelper(node.next)];
+  
+  _findNthElement(position) { 
+    let node = this.head; 
+    for (let i=0; i<position; i++) { 
+      node = node.next; 
+    } 
+    return node; 
   }
 }
+
 
 module.exports = { LinkedList, display };

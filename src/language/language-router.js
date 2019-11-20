@@ -75,58 +75,110 @@ languageRouter
         req.app.get('db'), req.language.id
       )
       let list = await LanguageService.createLinkedList(words, req.language)
-        
-      const head = list.head;
-      let { translation } = head.value;
-      let correct = false;
-      if(guess === translation) {
-        correct = true;
-        head.value.memory_value *= 2
-        head.value.correct_count++
-        req.language.total_score++
-      }
-      else {
-        head.value.incorrect_count++
-        head.value.memory_value = 1
-      }
-      // let oldHead = head.value
-      // let oldMem = head.value.memory_value
-      list.remove(head.value);
-      // console.log('HEAD------->', head)
-      list.insertAt(head.value, head.value.memory_value + 1);
-      // console.log('NEWLIST', JSON.stringify(list, null, 4))
-      let langFieldsToUpdate = {
-        head: list.head.value.id,
-        totalScore: req.language.total_score,
-        langId: req.language.id,
-      }
-      let wordFieldsToUpdate = {
-        wordId: head.value.id,
-        memoryValue: head.value.memory_value,
-        correctCount: head.value.correct_count,
-        incorrectCount: head.value.incorrect_count,
-        next: head.next
-      }
-      // console.log('HEADD', head.value)
-      // console.log('NEED TO UPDATE -->', wordFieldsToUpdate)
-      await LanguageService.updateLanguage(req.app.get('db'), langFieldsToUpdate)
-      await LanguageService.updateWord(req.app.get('db'), wordFieldsToUpdate)
-      // console.log('UPDATEDDDDDDD', wordFieldsToUpdate)
-      const nextWord = list.head.value
-      res.send(
-        {
-          isCorrect: correct,
-          nextWord: nextWord.original,
-          totalScore: req.language.total_score,
-          wordCorrectCount: nextWord.correct_count,
-          wordIncorrectCount: nextWord.incorrect_count,
-          answer: translation
-        }
-      )
+      // console.log('OLDLIST--->', JSON.stringify(list, null, 4))
+    //   const head = list.head;
+    //   let { translation } = head.value;
+    //   let oldHead = head.value.original
+    //   let correct = false;
+    //   if(guess === translation) {
+    //     correct = true;
+    //     head.value.memory_value *= 2
+    //     head.value.correct_count++
+    //     req.language.total_score++
+    //   }
+    //   else {
+    //     head.value.incorrect_count++
+    //     head.value.memory_value = 1
+    //   }
+    //   // let oldMem = head.value.memory_value
+    //   list.remove(head.value);
+    //   // console.log('HEAD------->', head)
+    //   list.insertAt(head.value, head.value.memory_value + 1);
+    //   // console.log('NEWLIST', JSON.stringify(list, null, 4))
+    //   let langFieldsToUpdate = {
+    //     head: list.head.value.id,
+    //     totalScore: req.language.total_score,
+    //     langId: req.language.id,
+    //   }
+    //   let wordFieldsToUpdate = {
+    //     wordId: head.value.id,
+    //     memoryValue: head.value.memory_value,
+    //     correctCount: head.value.correct_count,
+    //     incorrectCount: head.value.incorrect_count,
+    //     next: head.value.next
+    //   }
+    //   // console.log('HEADD', head.value)
+    //   // console.log('NEED TO UPDATE -->', wordFieldsToUpdate)
+    //   await LanguageService.updateLanguage(req.app.get('db'), langFieldsToUpdate)
+    //   await LanguageService.updateWord(req.app.get('db'), wordFieldsToUpdate)
+    //   // console.log('UPDATEDDDDDDD', wordFieldsToUpdate)
+    //   const nextWord = list.head.value;
+    //   res.send(
+    //     {
+    //       isCorrect: correct,
+    //       nextWord: nextWord.original,
+    //       totalScore: req.language.total_score,
+    //       wordCorrectCount: nextWord.correct_count,
+    //       wordIncorrectCount: nextWord.incorrect_count,
+    //       answer: translation
+    //     }
+    //   )
+    // }
+    // catch(error) {
+    //   next(error);
+    // }
+
+    let head = list.head;
+    let answer = list.head.value.translation;
+    let nextWord = head.next.value.original;
+    let correct_count = head.next.value.correct_count;
+    let memory_value = head.value.memory_value;
+
+    let isCorrect;
+
+    if (guess === list.head.value.translation) {
+      isCorrect = true;
+      req.language.total_score += 1;
+      head.value.correct_count += 1;
+      memory_value *= 2;
+      head.value.memory_value = memory_value;
+      list.head = head.next;
+      list.insertAt(head.value, memory_value);
     }
-    catch(error) {
-      next(error);
+    
+    else {
+      isCorrect = false;
+      list.head.value.incorrect_count += 1;
+      head.value.memory_value = 1;
+      list.head = head.next;
+      list.insertAt(head.value, memory_value);
     }
+    
+    let results = {
+      answer: answer,
+      isCorrect: isCorrect,
+      nextWord: nextWord,
+      totalScore: req.language.total_score,
+      wordCorrectCount: correct_count,
+      wordIncorrectCount: list.head.value.incorrect_count
+    };
+    
+    let updateArray = [];
+    let curr = list.head;
+    while (curr.next !== null) {
+      updateArray = [...updateArray, curr.value];
+      curr = curr.next;
+    }
+    updateArray = [...updateArray, curr.value];
+    // console.log(updateArray)
+    await LanguageService.insertWord(req.app.get('db'), updateArray, req.language.id, req.language.total_score);
+    
+    res.status(200).json(results);
+    next();
+  }
+  catch (error) {
+    next(error);
+  }
   });
 
 module.exports = languageRouter
