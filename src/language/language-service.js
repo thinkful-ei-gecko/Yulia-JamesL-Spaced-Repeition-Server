@@ -96,6 +96,7 @@ const LanguageService = {
                 // console.log('INDEX', index)
                 if(index+1 >= words.length) {
                   word.next = null;
+                  words[index - 1].next = word
                 }
                 else {
                   word.next = words[index + 1].id;

@@ -141,9 +141,13 @@ languageRouter
       req.language.total_score += 1;
       head.value.correct_count += 1;
       memory_value *= 2;
-      head.value.memory_value = memory_value;
-      list.head = head.next;
-      list.insertAt(head.value, memory_value);
+      head.value.memory_value = memory_value; 
+      list.head = head.next; 
+      if(memory_value > 9) {
+        console.log(memory_value)
+        memory_value = 9
+      }
+      list.insertAt(head.value, memory_value);          
     }
     
     else {
@@ -170,7 +174,7 @@ languageRouter
       curr = curr.next;
     }
     updateArray = [...updateArray, curr.value];
-    // console.log(updateArray)
+    console.log(updateArray)
     await LanguageService.insertWord(req.app.get('db'), updateArray, req.language.id, req.language.total_score);
     
     res.status(200).json(results);

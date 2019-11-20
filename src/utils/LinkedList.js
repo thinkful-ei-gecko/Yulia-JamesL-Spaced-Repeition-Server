@@ -137,4 +137,4 @@ class LinkedList {
 }
 
 
-module.exports = { LinkedList, display };
+module.exports = { LinkedList};
