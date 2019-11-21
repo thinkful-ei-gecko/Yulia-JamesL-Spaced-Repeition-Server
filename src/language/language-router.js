@@ -75,58 +75,6 @@ languageRouter
         req.app.get('db'), req.language.id
       )
       let list = await LanguageService.createLinkedList(words, req.language)
-      // console.log('OLDLIST--->', JSON.stringify(list, null, 4))
-    //   const head = list.head;
-    //   let { translation } = head.value;
-    //   let oldHead = head.value.original
-    //   let correct = false;
-    //   if(guess === translation) {
-    //     correct = true;
-    //     head.value.memory_value *= 2
-    //     head.value.correct_count++
-    //     req.language.total_score++
-    //   }
-    //   else {
-    //     head.value.incorrect_count++
-    //     head.value.memory_value = 1
-    //   }
-    //   // let oldMem = head.value.memory_value
-    //   list.remove(head.value);
-    //   // console.log('HEAD------->', head)
-    //   list.insertAt(head.value, head.value.memory_value + 1);
-    //   // console.log('NEWLIST', JSON.stringify(list, null, 4))
-    //   let langFieldsToUpdate = {
-    //     head: list.head.value.id,
-    //     totalScore: req.language.total_score,
-    //     langId: req.language.id,
-    //   }
-    //   let wordFieldsToUpdate = {
-    //     wordId: head.value.id,
-    //     memoryValue: head.value.memory_value,
-    //     correctCount: head.value.correct_count,
-    //     incorrectCount: head.value.incorrect_count,
-    //     next: head.value.next
-    //   }
-    //   // console.log('HEADD', head.value)
-    //   // console.log('NEED TO UPDATE -->', wordFieldsToUpdate)
-    //   await LanguageService.updateLanguage(req.app.get('db'), langFieldsToUpdate)
-    //   await LanguageService.updateWord(req.app.get('db'), wordFieldsToUpdate)
-    //   // console.log('UPDATEDDDDDDD', wordFieldsToUpdate)
-    //   const nextWord = list.head.value;
-    //   res.send(
-    //     {
-    //       isCorrect: correct,
-    //       nextWord: nextWord.original,
-    //       totalScore: req.language.total_score,
-    //       wordCorrectCount: nextWord.correct_count,
-    //       wordIncorrectCount: nextWord.incorrect_count,
-    //       answer: translation
-    //     }
-    //   )
-    // }
-    // catch(error) {
-    //   next(error);
-    // }
 
     let head = list.head;
     let answer = list.head.value.translation;
@@ -174,7 +122,6 @@ languageRouter
       curr = curr.next;
     }
     updateArray = [...updateArray, curr.value];
-    console.log(updateArray)
     await LanguageService.insertWord(req.app.get('db'), updateArray, req.language.id, req.language.total_score);
     
     res.status(200).json(results);
