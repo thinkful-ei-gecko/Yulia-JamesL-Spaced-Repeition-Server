@@ -21,7 +21,6 @@ class LinkedList {
     }
   }
   remove(item) {
-    console.log('REMOVING--->')
     if (!this.head) return null;
     if (this.head.value === item) {
       this.head = this.head.next;
@@ -34,7 +33,6 @@ class LinkedList {
       currNode = currNode.next;
     }
     if (currNode === null) {
-      console.log('Item not found');
       return;
     }
     previousNode.next = currNode.next;
@@ -55,7 +53,6 @@ class LinkedList {
   }
   insertBefore(item, key) {
     if (this.head === null) {
-      console.log('Key does not exist');
       return null;
     }
     let currNode = this.head;
@@ -65,14 +62,12 @@ class LinkedList {
       currNode = currNode.next;
     }
     if (currNode === null) {
-      console.log('key not found');
       return;
     }
     prevNode.next = new _Node(item, currNode);
   }
   insertAfter(item, key) {
     if (this.head === null) {
-      console.log('Key does not exist');
       return null;
     }
     let currNode = this.head;
@@ -80,37 +75,11 @@ class LinkedList {
       currNode = currNode.next;
     }
     if (currNode === null) {
-      console.log('key not found');
       return;
     }
     let tempNode = currNode.next;
     currNode.next = new _Node(item, tempNode);
   }
-  // insertAt(item, position) {
-  //   if (this.head === null) {
-  //     if (position === 1) {
-  //       this.insertFirst(item);
-  //       return;
-  //     } else {
-  //       this.insertLast(item);
-  //       return;
-  //     }
-  //   }
-  //   let currentPosition = 1;
-  //   let currNode = this.head;
-  //   let prevNode = this.head;
-  //   while (currentPosition !== position && currNode !== null) {
-  //     prevNode = currNode;
-  //     currNode = currNode.next;
-  //     currentPosition++;
-  //   }
-  //   if (currNode === null) {
-  //     this.insertLast(item);
-  //   }
-  //   let tempNode = currNode;
-  //   let newNode = new _Node(item, tempNode)
-  //   prevNode.next = newNode;
-  // }
   
   insertAt(itemToInsert, nthPosition) { 
     

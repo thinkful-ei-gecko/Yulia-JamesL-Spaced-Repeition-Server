@@ -92,8 +92,8 @@ languageRouter
       head.value.memory_value = memory_value; 
       list.head = head.next; 
       if(memory_value > 9) {
-        console.log(memory_value)
         memory_value = 9
+        head.value.memory_value = memory_value; 
       }
       list.insertAt(head.value, memory_value);          
     }
