@@ -1,24 +1,47 @@
-# Spaced repetition API!
+# Ricorda API
+- Live: https://fathomless-scrubland-69489.herokuapp.com
+- Client Repository: https://github.com/thinkful-ei-gecko/Yulia-JamesL-Spaced-Repetition-Client
+
+## Teammates: James Lee & Yulia Khisamutdonova
+
+## Description
+Ricorda API is the Express/NodeJS server responsible for handling API requests for Ricorda app. Users can make the following API requests:
+
+
+`POST /api/user`  Create a user account. Required fields:
+  - first name
+  - last name
+  - user name
+  - password (must contain at least one special character, digit, capital and lowercase letter, 8 -72 character long)
+
+`POST /api/auth/token` Log in. Reqired fields:
+ - username
+ - password
+
+`GET /api/language` Dashboard displays words to learn and score.
+
+`GET /api/language/head` Get next word for learning
+
+`POST /api/language/guess` Post user's answer
 
 ## Local dev setup
-
-If using user `dunder-mifflin`:
+- Clone the repository and run `npm i`
+- Create local Postgresql databases: `spaced-repetition` and `spaced-repetition-test`
 
 ```bash
-mv example.env .env
-createdb -U dunder-mifflin spaced-repetition
-createdb -U dunder-mifflin spaced-repetition-test
+createdb -U dbuser-name spaced-repetition
+createdb -U dbuser-name spaced-repetition-test
 ```
+- Run `mv example.env .env` and provide the local database locations within your `.env` file
 
-If your `dunder-mifflin` user has a password be sure to set it in `.env` for all appropriate fields. Or if using a different user, update appropriately.
+If your database user has a password be sure to set it in `.env` for all appropriate fields.
+
+- Run migration commands to create appropriate tables
 
 ```bash
-npm install
 npm run migrate
 env MIGRATION_DB_NAME=spaced-repetition-test npm run migrate
 ```
-
-And `npm test` should work at this point
 
 ## Configuring Postgres
 
@@ -50,3 +73,8 @@ Run the tests mode `npm test`
 Run the migrations up `npm run migrate`
 
 Run the migrations down `npm run migrate -- 0`
+
+## Tech stack
+- NodeJS
+- Express
+- PostgresQL
