@@ -92,8 +92,6 @@ const LanguageService = {
             .where({id: language_id})
               .update({total_score, head: words[0].id}),
               ...words.map((word, index) => {
-                // console.log('WORDS', word)
-                // console.log('INDEX', index)
                 if(index+1 >= words.length) {
                   word.next = null;
                   words[index - 1].next = word
